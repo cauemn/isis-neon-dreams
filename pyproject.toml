@@ -1,0 +1,35 @@
+[project]
+name = "isis-neon-dreams"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Caue Mallmann", email = "caue.am94@gmail.com"},
+]
+dependencies = []
+requires-python = "==3.13.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+packages = [
+    {include = "neon_dreams", from = "src"},
+]
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "-e file:///${PROJECT_ROOT}/#egg=isis-neon-dreams",
+]
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "ruff>=0.12.11",
+    "mypy>=1.17.1",
+]
