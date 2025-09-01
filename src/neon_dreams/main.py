@@ -2,43 +2,40 @@
 
 import asyncio
 import random
+import pprint
 
+from typing import NoReturn
+from .game_state import GameStateManager
 from .world.events import ambient_events
 
-async def ambient_task():
+async def ambient_task() -> NoReturn:
     """
     Tarefa que roda de forma assincrona exibindo mensagens
     e eventos do ambiente de forma aleatória
     """
     while True:
-        interval = random.uniform(15, 30)
+        interval: float = random.uniform(15, 30)
         await asyncio.sleep(interval)
         
-        message = random.choice(ambient_events)
+        message: str = random.choice(ambient_events)
         print(f"\n<< {message} >>")
 
-async def game_loop_task():
-    """
-    A tarefa principal do jogo, onde o jogador digita comandos
-    """
-
-    # TODO: Implementar o loop de input do jogador de forma assíncrona
-    print("Ísis: Neon Dreams - O jogo começou!")
-
-    while True:
-        await asyncio.sleep(1)
-
-
-async def main():
-    """
-    Função que inicia e gerencia todas as tarefas assíncronas.
-    """
-    print("Iniciando o motor do jogo...")
+async def game_loop_task() -> NoReturn:
     
-    # Cria a tarefa para rodar em segundo plano
-    ambience = asyncio.create_task(ambient_task())
-    # Cria a tarefa do loop principal do jogo
-    game_loop = asyncio.create_task(game_loop_task())
+    game = GameStateManager()
+    
+    print(f"Sala inicial: {game.current_room_id}")
+    estado_da_sala = game.get_current_room_dynamic_state()
+    pprint.pprint(estado_da_sala)
+    
+    while True:
+        await asyncio.sleep(60)
+
+
+async def main() -> None:
+    """ A função principal que inicia as tarefas. """
+    ambience: asyncio.Task[NoReturn] = asyncio.create_task(ambient_task())
+    game_loop: asyncio.Task[NoReturn] = asyncio.create_task(game_loop_task())
     await asyncio.gather(ambience, game_loop)
 
 
